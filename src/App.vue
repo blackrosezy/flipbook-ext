@@ -20,12 +20,12 @@
       @zoom-end="onZoomEnd"
     >
       <div class="action-bar">
-        <left-icon
+        <LeftIcon
           class="btn left"
           :class="{ disabled: !flipbook.canFlipLeft }"
           @click="flipbook.flipLeft"
         />
-        <plus-icon
+        <PlusIcon
           class="btn plus"
           :class="{ disabled: !flipbook.canZoomIn }"
           @click="flipbook.zoomIn"
@@ -33,12 +33,12 @@
         <span class="page-num">
           Page {{ flipbook.page }} of {{ flipbook.numPages }}
         </span>
-        <minus-icon
+        <MinusIcon
           class="btn minus"
           :class="{ disabled: !flipbook.canZoomOut }"
           @click="flipbook.zoomOut"
         />
-        <right-icon
+        <RightIcon
           class="btn right"
           :class="{ disabled: !flipbook.canFlipRight }"
           @click="flipbook.flipRight"
@@ -54,15 +54,22 @@
 
 <script>
 import 'vue-material-design-icons/styles.css'
-import LeftIcon from 'vue-material-design-icons/ChevronLeftCircle'
-import RightIcon from 'vue-material-design-icons/ChevronRightCircle'
-import PlusIcon from 'vue-material-design-icons/PlusCircle'
-import MinusIcon from 'vue-material-design-icons/MinusCircle'
-import Flipbook from './Flipbook'
-import Ribbon from './Ribbon'
+import ChevronLeftCircle from 'vue-material-design-icons/ChevronLeftCircle.vue'
+import ChevronRightCircle from 'vue-material-design-icons/ChevronRightCircle.vue'
+import PlusCircle from 'vue-material-design-icons/PlusCircle.vue'
+import MinusCircle from 'vue-material-design-icons/MinusCircle.vue'
+import Flipbook from './Flipbook.vue'
+import Ribbon from './Ribbon.vue'
 
 export default {
-  components: { Flipbook, LeftIcon, RightIcon, PlusIcon, MinusIcon, Ribbon },
+  components: { 
+    Flipbook, 
+    LeftIcon: ChevronLeftCircle, 
+    RightIcon: ChevronRightCircle, 
+    PlusIcon: PlusCircle, 
+    MinusIcon: MinusCircle, 
+    Ribbon 
+  },
   data() {
     return {
       pages: [],
@@ -72,12 +79,16 @@ export default {
     }
   },
   methods: {
-    onFlipLeftStart(page) { console.log('flip-left-start', page) },
+    onFlipLeftStart(page) { 
+      console.log('flip-left-start', page) 
+    },
     onFlipLeftEnd(page) {
       console.log('flip-left-end', page)
       window.location.hash = '#' + page
     },
-    onFlipRightStart(page) { console.log('flip-right-start', page) },
+    onFlipRightStart(page) { 
+      console.log('flip-right-start', page) 
+    },
     onFlipRightEnd(page) {
       console.log('flip-right-end', page)
       window.location.hash = '#' + page
@@ -97,8 +108,8 @@ export default {
     window.addEventListener('keydown', (ev) => {
       const flipbook = this.$refs.flipbook
       if (!flipbook) return
-      if (ev.keyCode == 37 && flipbook.canFlipLeft) flipbook.flipLeft()
-      if (ev.keyCode == 39 && flipbook.canFlipRight) flipbook.flipRight()
+      if (ev.keyCode === 37 && flipbook.canFlipLeft) flipbook.flipLeft()
+      if (ev.keyCode === 39 && flipbook.canFlipRight) flipbook.flipRight()
     })
 
     // Simulate asynchronous pages initialization
@@ -126,6 +137,10 @@ export default {
     window.addEventListener('hashchange', this.setPageFromHash)
     this.setPageFromHash()
   },
+  beforeUnmount() {
+    window.removeEventListener('hashchange', this.setPageFromHash)
+    window.removeEventListener('keydown', this.handleKeydown)
+  }
 }
 </script>
 
