@@ -18,9 +18,6 @@ npm install
 
 # Start the development server
 npm run dev
-
-# Build for production
-npm run build
 ```
 
 ## Features
